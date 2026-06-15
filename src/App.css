@@ -1804,3 +1804,48 @@ table.equipment-table tr.is-overridden td {
 }
 .ai-lead-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .ai-lead-msg { font-size: 13px; color: #b3261e; margin-top: 6px; display: block; }
+
+/* ── Индикатор обновления в боковом меню ── */
+.update-widget {
+  margin: 0 4px 10px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.update-widget.update-ready {
+  background: rgba(45,125,74,0.18);
+  border-color: rgba(45,125,74,0.4);
+}
+.update-widget-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.update-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+.update-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #f5b76e, #e8602f);
+  transition: width 0.3s ease-out;
+}
+.update-restart-btn {
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-radius: 6px;
+  background: #2d7d4a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.update-restart-btn:hover { background: #36955a; }

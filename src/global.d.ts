@@ -11,11 +11,19 @@
 } from './types'
 
 declare global {
+  interface UpdateStatus {
+    status: 'idle' | 'checking' | 'downloading' | 'ready' | 'latest' | 'error' | 'dev'
+    percent?: number
+    version?: string
+    message?: string
+  }
   interface Window {
     companyApi?: {
       appReady: () => void
-      checkUpdates: () => Promise<{ status: string; message: string }>
-      getUpdateStatus: () => Promise<{ status: string; message: string }>
+      checkUpdates: () => Promise<UpdateStatus>
+      getUpdateStatus: () => Promise<UpdateStatus>
+      installUpdate: () => Promise<boolean>
+      onUpdateEvent: (callback: (payload: UpdateStatus) => void) => () => void
       chooseEstimateFolder: () => Promise<string | null>
       chooseManagerPhoto: () => Promise<string | null>
       chooseNomenclatureFile: () => Promise<string | null>

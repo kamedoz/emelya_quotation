@@ -100,6 +100,7 @@ function App() {
   const [objectLead, setObjectLead] = useState('')
   const [aiBusy, setAiBusy] = useState(false)
   const [aiMsg, setAiMsg] = useState('')
+  const [updateState, setUpdateState] = useState<UpdateStatus | null>(null)
   const [updateChecking, setUpdateChecking] = useState(false)
   const [updateMsg, setUpdateMsg] = useState('')
   const [logoError, setLogoError] = useState(false)
@@ -164,6 +165,13 @@ function App() {
     }
 
     void bootstrap()
+  }, [])
+
+  // Подписка на события автообновления — показываем прогресс в боковом меню
+  useEffect(() => {
+    const off = window.companyApi?.onUpdateEvent?.((payload) => setUpdateState(payload))
+    void window.companyApi?.getUpdateStatus?.().then((s) => { if (s) setUpdateState(s) })
+    return () => { off?.() }
   }, [])
 
   // Автосохранение настроек (профиль, маржа) с дебаунсом
@@ -810,6 +818,28 @@ function App() {
         </nav>
 
         <div className="sidebar-spacer" />
+
+        {updateState && (updateState.status === 'checking' || updateState.status === 'downloading' || updateState.status === 'ready') ? (
+          <div className={`update-widget update-${updateState.status}`}>
+            {updateState.status === 'ready' ? (
+              <>
+                <div className="update-widget-title">✓ Обновление готово{updateState.version ? ` (${updateState.version})` : ''}</div>
+                <button className="update-restart-btn" onClick={() => window.companyApi?.installUpdate?.()}>
+                  Перезапустить и обновить
+                </button>
+              </>
+            ) : updateState.status === 'checking' ? (
+              <div className="update-widget-title">Проверка обновлений…</div>
+            ) : (
+              <>
+                <div className="update-widget-title">
+                  Загрузка обновления{updateState.version ? ` ${updateState.version}` : ''} — {updateState.percent ?? 0}%
+                </div>
+                <div className="update-bar"><div className="update-bar-fill" style={{ width: `${updateState.percent ?? 0}%` }} /></div>
+              </>
+            )}
+          </div>
+        ) : null}
 
         <div className="sidebar-footer">
           <button className="sidebar-profile-btn" onClick={() => setShowProfile(true)}>

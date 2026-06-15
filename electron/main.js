@@ -11,7 +11,7 @@ import { loadOverlayConfig, saveOverlayConfig } from './overlay-store.js'
 import { loadProjects, saveProjects } from './projects-store.js'
 import { loadEquipmentModels, saveEquipmentModels } from './equipment-models-store.js'
 import { importSmetaFromPdf } from './smeta-import.js'
-import { initAutoUpdate, checkForUpdatesManual, getUpdateStatus } from './auto-update.js'
+import { initAutoUpdate, checkForUpdatesManual, getUpdateStatus, installUpdate } from './auto-update.js'
 import { generateObjectDescription } from './ai-description.js'
 import { readPriceSettings, writePriceSettings } from './price-settings-store.js'
 
@@ -176,6 +176,7 @@ app.whenReady().then(() => {
   // Автообновление (если в настройках задан адрес сервера обновлений)
   ipcMain.handle('company:check-updates', async () => checkForUpdatesManual(() => mainWindow))
   ipcMain.handle('company:update-status', async () => getUpdateStatus())
+  ipcMain.handle('company:install-update', async () => installUpdate())
 
   ipcMain.handle('company:get-settings', async () => readSettings())
   ipcMain.handle('company:get-stored-catalog-info', async () => getLocalCatalogInfo())

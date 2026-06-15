@@ -4,6 +4,12 @@ contextBridge.exposeInMainWorld('companyApi', {
   appReady: () => ipcRenderer.send('company:app-ready'),
   checkUpdates: async () => ipcRenderer.invoke('company:check-updates'),
   getUpdateStatus: async () => ipcRenderer.invoke('company:update-status'),
+  installUpdate: async () => ipcRenderer.invoke('company:install-update'),
+  onUpdateEvent: (callback) => {
+    const handler = (_event, payload) => callback(payload)
+    ipcRenderer.on('company:update-event', handler)
+    return () => ipcRenderer.removeListener('company:update-event', handler)
+  },
   chooseEstimateFolder: async () => ipcRenderer.invoke('company:choose-estimate-folder'),
   chooseManagerPhoto: async () => ipcRenderer.invoke('company:choose-manager-photo'),
   chooseNomenclatureFile: async () => ipcRenderer.invoke('company:choose-nomenclature-file'),
