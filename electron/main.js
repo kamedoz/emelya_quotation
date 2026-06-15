@@ -12,6 +12,7 @@ import { loadProjects, saveProjects } from './projects-store.js'
 import { loadEquipmentModels, saveEquipmentModels } from './equipment-models-store.js'
 import { importSmetaFromPdf } from './smeta-import.js'
 import { initAutoUpdate, checkForUpdatesManual, getUpdateStatus } from './auto-update.js'
+import { generateObjectDescription } from './ai-description.js'
 import { readPriceSettings, writePriceSettings } from './price-settings-store.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -257,6 +258,9 @@ app.whenReady().then(() => {
       payload.nomenclatureFilePath,
     )
   })
+  ipcMain.handle('company:ai-generate-description', async (_event, payload) =>
+    generateObjectDescription(payload),
+  )
   ipcMain.handle('company:import-smeta-pdf', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       filters: [{ extensions: ['pdf'], name: 'PDF' }],

@@ -43,6 +43,7 @@ const defaultSettings: CompanyApiSettings = {
   marginPercent: 0,
   sectionMargins: {},
   updateFeedUrl: '',
+  aiApiKey: '',
 }
 
 function getErrorMessage(error: unknown) {
@@ -96,6 +97,9 @@ function App() {
   const [showProfile, setShowProfile] = useState(false)
   const [showEditor, setShowEditor] = useState(false)
   const [pageOverrides, setPageOverrides] = useState<Record<number, boolean>>({})
+  const [objectLead, setObjectLead] = useState('')
+  const [aiBusy, setAiBusy] = useState(false)
+  const [aiMsg, setAiMsg] = useState('')
   const [updateChecking, setUpdateChecking] = useState(false)
   const [updateMsg, setUpdateMsg] = useState('')
   const [logoError, setLogoError] = useState(false)
@@ -184,6 +188,11 @@ function App() {
 
   const baseEstimate = useMemo(() => {
     if (!selectedProject) return null
+    // Импортированный объект: сценарий собираем из сметы, а не из расчёта
+    if (selectedProject.importedSmeta) {
+      const { scenario } = buildImportedProposal(selectedProject.importedSmeta, selectedProject.name, selectedProject.objectType)
+      return { projectId: selectedProject.id, scenarios: [scenario] }
+    }
     return buildEstimate(selectedProject, profile, settings.marginPercent, settings.sectionMargins, rateOverrides)
   }, [profile, selectedProject, settings.marginPercent, settings.sectionMargins, rateOverrides])
 
@@ -234,6 +243,12 @@ function App() {
     const map: Record<string, { base: number; withMargin: number; profit: number }> = {}
     for (const project of projects) {
       try {
+        // Импортированный объект: финансы берём из суммы сметы (без расчётного движка)
+        if (project.importedSmeta) {
+          const total = project.importedSmeta.totals.total
+          map[project.id] = { base: total, withMargin: total, profit: 0 }
+          continue
+        }
         const noMargin = buildEstimate(project, profile, 0, {}, rateOverrides)
         const withMargin = buildEstimate(project, profile, settings.marginPercent, settings.sectionMargins, rateOverrides)
         const baseScenario = noMargin.scenarios.find(s => s.id === selectedScenarioId) ?? noMargin.scenarios[0]
@@ -276,11 +291,21 @@ function App() {
     setImportBusy(true)
     setImportMsg('')
     try {
-      const { scenario, proposalPages: pages, project } = buildImportedProposal(
+      const { scenario, proposalPages: pages, project: builtProject } = buildImportedProposal(
         smetaImport,
         importName.trim() || 'Импортированная смета',
         importKind,
       )
+      // Сохраняем импортированную смету как объект (проект), чтобы к нему можно
+      // было вернуться и пересчитать. Смета хранится прямо на проекте.
+      const project: Project = { ...builtProject, clientName: 'Импорт', importedSmeta: smetaImport }
+      setProjects(prev => {
+        const next = [...prev, project]
+        void window.companyApi?.saveProjects?.(next)
+        return next
+      })
+      setSelectedProjectId(project.id)
+
       // Для внешней сметы конкретных количеств нет. Карточки-заглушки оставляем,
       // чтобы они ЗАКРЫЛИ шаблонные цифры, но числа не подставляем (см. pageOverlayFromConfig).
       const cfg = overlayConfig ?? defaultOverlayConfig('premium-knx')
@@ -295,6 +320,9 @@ function App() {
       })
       if (result) {
         setImportMsg(`КП сохранено: ${result.filePath}`)
+        // Объект сохранён и выбран — закрываем окно импорта, показываем его
+        setSmetaImport(null)
+        setPage('equipment')
       }
     } catch (error) {
       setImportMsg(getErrorMessage(error))
@@ -330,6 +358,9 @@ function App() {
 
   const rawProposalPages = useMemo(() => {
     if (!selectedProject || !selectedScenario) return []
+    if (selectedProject.importedSmeta) {
+      return buildImportedProposal(selectedProject.importedSmeta, selectedProject.name, selectedProject.objectType).proposalPages
+    }
     return buildProposalPageSummaries(selectedProject, selectedScenario)
   }, [selectedProject, selectedScenario])
 
@@ -348,10 +379,38 @@ function App() {
     [rawProposalPages, pageOverrides],
   )
 
-  // Сбрасываем ручной выбор при смене проекта
+  // Сбрасываем ручной выбор и продающее описание при смене проекта
   useEffect(() => {
     setPageOverrides({})
+    setObjectLead('')
+    setAiMsg('')
   }, [selectedProjectId])
+
+  async function handleGenerateDescription() {
+    if (!selectedProject || !selectedScenario || aiBusy) return
+    setAiBusy(true)
+    setAiMsg('')
+    try {
+      const sections = proposalPages
+        .filter(p => p.included !== false && p.pageNumber >= 3 && p.pageNumber <= 15)
+        .map(p => ({
+          name: p.title,
+          materials: p.amountValues?.[0] ?? 0,
+          works: p.amountValues?.[1] ?? 0,
+        }))
+      const text = await window.companyApi?.aiGenerateDescription?.({
+        project: selectedProject,
+        scenario: selectedScenario,
+        objectKind: objectDescription,
+        sections,
+      })
+      if (text) setObjectLead(text)
+    } catch (error) {
+      setAiMsg(getErrorMessage(error))
+    } finally {
+      setAiBusy(false)
+    }
+  }
 
   const proposalPagesWithPreview = useMemo(
     () =>
@@ -488,6 +547,7 @@ function App() {
       await persistSettings(settings)
       const result = await window.companyApi?.saveEstimateDocument({
         objectDescription,
+        objectLead: objectLead.trim() || undefined,
         overlayConfig: overlayConfig ?? defaultOverlayConfig('premium-knx'),
         profile,
         project: selectedProject,
@@ -619,6 +679,24 @@ function App() {
                   <input type="number" min={1} max={30} value={settings.proposalValidityDays}
                     onChange={e => patchSettings({ proposalValidityDays: Math.max(1, Number(e.target.value) || 7) })} />
                 </label>
+              </div>
+
+              <div className="field" style={{ marginTop: 16 }}>
+                <div className="ai-lead-head">
+                  <span className="field-label">Продающее описание объекта (на обложке)</span>
+                  <button type="button" className="btn btn-sm ai-btn" onClick={handleGenerateDescription} disabled={aiBusy}
+                    title="Сгенерировать текст под этот объект с помощью ИИ">
+                    {aiBusy ? 'ИИ пишет…' : '✨ Сгенерировать ИИ'}
+                  </button>
+                </div>
+                <textarea
+                  className="ai-lead-textarea"
+                  rows={3}
+                  value={objectLead}
+                  onChange={e => setObjectLead(e.target.value)}
+                  placeholder="Оставьте пустым — на обложке будет «Тип — Название». Или сгенерируйте продающий текст кнопкой ✨."
+                />
+                {aiMsg ? <span className="ai-lead-msg">{aiMsg}</span> : null}
               </div>
             </div>
 
@@ -806,6 +884,15 @@ function App() {
                   {updateChecking ? 'Проверка…' : 'Проверить обновления'}
                 </button>
                 {updateMsg ? <span className="save-msg">{updateMsg}</span> : null}
+              </div>
+
+              <h3 style={{ marginTop: 22, marginBottom: 8 }}>Искусственный интеллект</h3>
+              <p className="modal-hint" style={{ marginTop: 0 }}>
+                Ключ Anthropic для генерации продающих описаний объектов. Получить можно на console.anthropic.com.
+              </p>
+              <div className="field">
+                <span className="field-label">API-ключ Anthropic (необязательно)</span>
+                <input type="password" value={settings.aiApiKey ?? ''} onChange={e => patchSettings({ aiApiKey: e.target.value })} placeholder="sk-ant-..." />
               </div>
             </div>
           </div>

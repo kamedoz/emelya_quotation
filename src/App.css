@@ -1772,3 +1772,35 @@ table.equipment-table tr.is-overridden td {
   padding-top: 18px;
   border-top: 1px solid var(--border);
 }
+
+/* ── ИИ-описание объекта ── */
+.ai-lead-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.ai-btn {
+  background: linear-gradient(135deg, #f5b76e, #e8602f);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+}
+.ai-btn:hover { filter: brightness(1.05); color: #fff; border: none; }
+.ai-btn:disabled { opacity: 0.6; }
+.ai-lead-textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  color: var(--text-main);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  line-height: 1.5;
+}
+.ai-lead-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.ai-lead-msg { font-size: 13px; color: #b3261e; margin-top: 6px; display: block; }

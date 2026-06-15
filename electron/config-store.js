@@ -18,6 +18,7 @@ const defaultSettings = {
   marginPercent: 0,
   sectionMargins: {},
   updateFeedUrl: '',
+  aiApiKey: '',
 }
 
 function getSettingsPath() {

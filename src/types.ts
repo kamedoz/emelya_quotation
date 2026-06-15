@@ -40,6 +40,8 @@ export interface Project {
   areaM2: number
   rooms: ProjectRoom[]
   requirements: ProjectRequirement[]
+  // Заполняется, если проект создан импортом готовой сметы (PDF)
+  importedSmeta?: SmetaImportResult
 }
 
 export interface EstimateLine {
@@ -113,6 +115,7 @@ export interface CompanyApiSettings {
   marginPercent: number
   sectionMargins: Record<string, number>
   updateFeedUrl?: string
+  aiApiKey?: string
 }
 
 export interface SaveEstimateResult {

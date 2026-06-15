@@ -39,6 +39,12 @@ declare global {
       }) => Promise<ImportProjectsResult | null>
       installLocalCatalog: (sourceFilePath: string) => Promise<string>
       importSmetaPdf: () => Promise<SmetaImportResult | null>
+      aiGenerateDescription: (payload: {
+        project: Project
+        scenario: EstimateScenario
+        objectKind: string
+        sections?: { name: string; materials: number; works: number }[]
+      }) => Promise<string>
       loadEquipmentModels: () => Promise<Record<string, { model: string; mode: 'per' | 'fixed'; value: number }[]>>
       saveEquipmentModels: (models: Record<string, { model: string; mode: 'per' | 'fixed'; value: number }[]>) => Promise<boolean>
       loadProjects: () => Promise<Project[]>
@@ -46,6 +52,7 @@ declare global {
       openCatalogFolder: () => Promise<string>
       saveEstimateDocument: (payload: {
         objectDescription: string
+        objectLead?: string
         overlayConfig?: OverlayConfig
         profile: SmartHomeProfile
         project: Project

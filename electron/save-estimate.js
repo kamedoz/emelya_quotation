@@ -425,7 +425,7 @@ function overlayText({ x, y, width, text, size = 54, color = '#f05b32', weight =
   return `<div class="text" style="left:${px(x)};top:${px(y)};width:${px(width)};font-size:${px(size)};color:${color};font-weight:${weight};text-align:${align};line-height:${lineHeight};${wrap}">${escapeHtml(text)}</div>`
 }
 
-function coverOverlay(project, scenario, profile, settings, objectDescription) {
+function coverOverlay(project, scenario, profile, settings, objectDescription, objectLead) {
   const validUntil = new Date()
   validUntil.setDate(validUntil.getDate() + (settings.proposalValidityDays || 7))
   const validity = validUntil.toLocaleDateString('ru-RU')
@@ -452,9 +452,21 @@ function coverOverlay(project, scenario, profile, settings, objectDescription) {
   const contactText = contactLines.join('\n')
   const contactY = contactLines.length > 1 ? 1430 : 1452
 
+  // Описание объекта. Без ИИ — короткая строка «Тип — Название».
+  // С продающим текстом ИИ — закрываем большую область и пишем 2–3 строки.
+  const lead = (objectLead || '').trim()
+  const descBlock = lead
+    ? [
+        overlayRect({ x: 296, y: 858, width: 565, height: 132, background: 'rgb(17,17,19)' }),
+        overlayText({ x: 304, y: 862, width: 552, text: lead, size: 23, color: '#ffffff', weight: 600, lineHeight: 1.3 }),
+      ].join('')
+    : [
+        overlayRect({ x: 296, y: 862, width: 560, height: 42, background: 'rgb(17,17,19)' }),
+        overlayText({ x: 304, y: 864, width: 545, text: [objectDescription || project.objectType, project.name].filter(Boolean).join(' — '), size: 30, color: '#ffffff', weight: 700, nowrap: true }),
+      ].join('')
+
   return [
-    // Значение в карточке «Описание объекта» (шаблонное «Дом» на 869-889)
-    overlayRect({ x: 296, y: 862, width: 560, height: 42, background: 'rgb(17,17,19)' }),
+    descBlock,
     techOverlay,
     overlayRect({ x: 78, y: 560, width: 720, height: 72, background: 'rgb(17,17,19)', radius: 6 }),
     // Срок действия: закрывает шаблонную дату (y 1250-1285)
@@ -466,7 +478,6 @@ function coverOverlay(project, scenario, profile, settings, objectDescription) {
     overlayRect({ x: 1148, y: 1374, width: 436, height: 196, background: 'rgb(28,28,30)', radius: 26 }),
     managerPhoto ? `<img class="manager-photo cover-photo" src="${managerPhoto}" alt="" />` : '',
     overlayText({ x: 90, y: 570, width: 680, text: project.name, size: 33, color: '#ffffff', weight: 500 }),
-    overlayText({ x: 304, y: 864, width: 545, text: [objectDescription || project.objectType, project.name].filter(Boolean).join(' — '), size: 30, color: '#ffffff', weight: 700, nowrap: true }),
     overlayText({ x: 82, y: 1252, width: 480, text: `КП действительно до ${validity}`, size: 26, color: '#ffffff', weight: 500 }),
     overlayText({ x: 332, y: 1376, width: 340, text: settings.managerTitle || 'Менеджер по работе с клиентами', size: 20, color: '#9f9fa5', weight: 500, lineHeight: 1.3 }),
     overlayText({ x: 332, y: 1462, width: 345, text: settings.managerName || 'Имя Фамилия', size: 28, color: '#ffffff', weight: 700, lineHeight: 1.15 }),
@@ -620,7 +631,7 @@ function pageOverlayFromConfig(pageCfg, countValues, amountValues) {
   return cards + prices
 }
 
-function buildHtmlDocument(project, scenario, profile, settings, objectDescription, overlayConfig, proposalPages) {
+function buildHtmlDocument(project, scenario, profile, settings, objectDescription, overlayConfig, proposalPages, objectLead) {
   const sections = createSectionMetrics(project, scenario)
   const proposalPageMap = new Map()
   if (Array.isArray(proposalPages)) {
@@ -630,7 +641,7 @@ function buildHtmlDocument(project, scenario, profile, settings, objectDescripti
   }
 
   const pageOverlays = new Map()
-  pageOverlays.set(1, coverOverlay(project, scenario, profile, settings, objectDescription))
+  pageOverlays.set(1, coverOverlay(project, scenario, profile, settings, objectDescription, objectLead))
   pageOverlays.set(2, technologyPageOverlay(scenario))
   pageOverlays.set(16, summaryOverlay(scenario))
   pageOverlays.set(17, '')
@@ -847,6 +858,7 @@ export async function saveEstimateDocument(payload) {
     objectDescription,
     payload.overlayConfig,
     proposalPages,
+    payload.objectLead,
   )
 
   const tempDir = path.join(os.tmpdir(), '1c-quotation-pdf')

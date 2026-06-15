@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('companyApi', {
   installLocalCatalog: async (sourceFilePath) =>
     ipcRenderer.invoke('company:install-local-catalog', sourceFilePath),
   importSmetaPdf: async () => ipcRenderer.invoke('company:import-smeta-pdf'),
+  aiGenerateDescription: async (payload) => ipcRenderer.invoke('company:ai-generate-description', payload),
   loadEquipmentModels: async () => ipcRenderer.invoke('company:load-equipment-models'),
   saveEquipmentModels: async (models) => ipcRenderer.invoke('company:save-equipment-models', models),
   loadProjects: async () => ipcRenderer.invoke('company:load-projects'),
