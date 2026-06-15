@@ -1,0 +1,13 @@
+﻿code,sku,name,price,category,brand,system,sourceUrl,priceDate,currency,notes
+20640REG,20640REG,"Jung KNX power supply 640mA",52160,power_supply,Jung,KNX,https://jungstore.ru/20640REG/,2026-06-05,RUB,"Russian retail price"
+2076-2T,2076-2T,"Jung KNX binary input 2-channel",17726,binary_input,Jung,KNX,https://jungstore.ru/knx/2076-2T/,2026-06-05,RUB,"Russian retail price"
+A3281AL,A3281AL,"Jung KNX motion sensor standard 2.2m",42040,motion_sensor,Jung,KNX,https://jungstore.ru/knx/A3281AL/,2026-06-05,RUB,"Russian retail price"
+3361-1WW,3361-1WW,"Jung KNX ceiling presence sensor",46721,presence_sensor,Jung,KNX,https://jungstore.ru/knx/3361-1WW/,2026-06-05,RUB,"Russian retail price"
+A5194KRMTSD,A5194KRMTSD,"Jung KNX compact room controller 4-gang",96533,room_controller,Jung,KNX,https://jungstore.ru/A5194KRMTSD/,2026-06-05,RUB,"Russian retail price"
+230061SR,230061SR,"Jung switching actuator 6 light channels or 3 blind channels",69962.01,actuator,Jung,KNX,https://jungstore.ru/230061SR/,2026-06-05,RUB,"Russian retail price"
+230161SR,230161SR,"Jung switching actuator 16 light channels or 8 blind channels",86871,actuator,Jung,KNX,https://jungstore.ru/230161SR/,2026-06-05,RUB,"Russian retail price"
+2316.16REGHE,2316.16REGHE,"Jung switching/blind actuator",67700,actuator,Jung,KNX,https://jungstore.ru/knx/2316.16REGHE/,2026-06-05,RUB,"Russian retail price"
+3902REGHE,3902REGHE,"Jung universal LED dimmer 2-gang DIN",86796,dimmer,Jung,KNX,https://jungstore.ru/knx/3902REGHE/,2026-06-05,RUB,"Russian retail price"
+390051SLEDR,390051SLEDR,"Jung KNX LED controller 5-gang DIN",87615,led_controller,Jung,KNX,https://jungstore.ru/390051SLEDR/,2026-06-05,RUB,"Russian retail price"
+2177SVR,2177SVR,"Jung electro-mechanical valve actuator with controller",66761,heating_actuator,Jung,KNX,https://jungstore.ru/knx/2177SVR/,2026-06-05,RUB,"Russian retail price"
+CD5073RFTSM,CD5073RFTSM,"Jung KNX RF wall module 3-gang",26349,wall_module,Jung,KNX,https://jungstore.ru/CD5073RFTSM/,2026-06-05,RUB,"Russian retail price"

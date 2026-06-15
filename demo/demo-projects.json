@@ -1,0 +1,129 @@
+[
+  {
+    "id": "demo-house-premium",
+    "name": "Дом в Красногорске",
+    "clientName": "Семья Емеля",
+    "objectType": "Дом",
+    "areaM2": 286,
+    "rooms": [
+      { "id": "hall", "name": "Холл", "areaM2": 28 },
+      { "id": "living", "name": "Гостиная", "areaM2": 42 },
+      { "id": "kitchen", "name": "Кухня", "areaM2": 24 },
+      { "id": "master", "name": "Мастер-спальня", "areaM2": 32 },
+      { "id": "kids", "name": "Детская", "areaM2": 20 },
+      { "id": "terrace", "name": "Терраса", "areaM2": 26 }
+    ],
+    "requirements": [
+      {
+        "code": "light-groups",
+        "complexity": 1.15,
+        "estimatedUnitPrice": 9800,
+        "name": "Группы освещения",
+        "quantity": 24,
+        "source1cSku": "LIGHT-24",
+        "unitLabel": "гр.",
+        "zone": "Освещение"
+      },
+      {
+        "code": "motion",
+        "complexity": 1,
+        "estimatedUnitPrice": 5600,
+        "name": "Датчики движения и присутствия",
+        "quantity": 8,
+        "source1cSku": "MOTION-08",
+        "unitLabel": "шт",
+        "zone": "Освещение"
+      },
+      {
+        "code": "curtains",
+        "complexity": 1.1,
+        "estimatedUnitPrice": 12800,
+        "name": "Электрокарнизы",
+        "quantity": 10,
+        "source1cSku": "CURTAIN-10",
+        "unitLabel": "шт",
+        "zone": "Шторы"
+      },
+      {
+        "code": "climate",
+        "complexity": 1.2,
+        "estimatedUnitPrice": 22100,
+        "name": "Климатические зоны",
+        "quantity": 6,
+        "source1cSku": "CLIMATE-06",
+        "unitLabel": "зон",
+        "zone": "Климат"
+      },
+      {
+        "code": "warm-floor",
+        "complexity": 1.1,
+        "estimatedUnitPrice": 9200,
+        "name": "Контуры теплого пола",
+        "quantity": 9,
+        "source1cSku": "FLOOR-09",
+        "unitLabel": "контур",
+        "zone": "Отопление"
+      },
+      {
+        "code": "leak",
+        "complexity": 1,
+        "estimatedUnitPrice": 7100,
+        "name": "Датчики протечки",
+        "quantity": 7,
+        "source1cSku": "LEAK-07",
+        "unitLabel": "шт",
+        "zone": "Безопасность"
+      },
+      {
+        "code": "scenes",
+        "complexity": 1.15,
+        "estimatedUnitPrice": 4600,
+        "name": "Сценарии автоматизации",
+        "quantity": 8,
+        "source1cSku": "SCENE-08",
+        "unitLabel": "сцен",
+        "zone": "Сценарии"
+      },
+      {
+        "code": "multimedia-audio",
+        "complexity": 1.25,
+        "estimatedUnitPrice": 145000,
+        "name": "Мультимедиа и акустика гостиной",
+        "quantity": 1,
+        "source1cSku": "MEDIA-AUDIO-01",
+        "unitLabel": "компл.",
+        "zone": "Мультимедиа"
+      },
+      {
+        "code": "camera-outdoor",
+        "complexity": 1.1,
+        "estimatedUnitPrice": 21800,
+        "name": "Уличная камера видеонаблюдения",
+        "quantity": 6,
+        "source1cSku": "CAM-OUT-06",
+        "unitLabel": "шт",
+        "zone": "Видеонаблюдение"
+      },
+      {
+        "code": "intercom-door",
+        "complexity": 1.15,
+        "estimatedUnitPrice": 47200,
+        "name": "Домофон и умный замок",
+        "quantity": 1,
+        "source1cSku": "INTERCOM-01",
+        "unitLabel": "компл.",
+        "zone": "Контроль доступа"
+      },
+      {
+        "code": "voice-alice",
+        "complexity": 1,
+        "estimatedUnitPrice": 18900,
+        "name": "Голосовой ассистент Алиса",
+        "quantity": 3,
+        "source1cSku": "VOICE-ALICE-03",
+        "unitLabel": "шт",
+        "zone": "Голосовые помощники"
+      }
+    ]
+  }
+]

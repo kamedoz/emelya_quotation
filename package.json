@@ -1,0 +1,91 @@
+{
+  "name": "1c_quotation",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Формирование коммерческих предложений. Разработано для компании «Емеля умный дом».",
+  "author": "Андрей Анищенко",
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "dev:desktop": "concurrently -k \"vite\" \"wait-on tcp:5173 && set ELECTRON_DEV=1&& electron .\"",
+    "desktop": "electron .",
+    "build": "tsc -b && vite build",
+    "build:desktop": "npm run build && electron-builder",
+    "build:installer": "npm run build && electron-builder --win --x64",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "build": {
+    "appId": "com.emelya.quotation",
+    "productName": "Емеля — КП",
+    "copyright": "© Емеля умный дом · Автор: Андрей Анищенко",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "node_modules/**/*",
+      "public/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "public/emelya-icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Емеля — КП",
+      "license": "build-assets/about.txt"
+    },
+    "extraResources": [
+      {
+        "from": "electron/template-assets",
+        "to": "template-assets"
+      }
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "electron/template-assets/**"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "kamedoz",
+        "repo": "emelya_quotation",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9",
+    "pdfjs-dist": "^5.6.205",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.12.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "concurrently": "^9.2.1",
+    "electron": "^41.7.1",
+    "electron-builder": "^25.1.8",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.12",
+    "wait-on": "^9.0.10"
+  }
+}

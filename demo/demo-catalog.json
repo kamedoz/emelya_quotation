@@ -1,0 +1,13 @@
+[
+  { "code": "LIGHT-24", "name": "Группы освещения", "price": 9800, "sku": "LIGHT-24" },
+  { "code": "MOTION-08", "name": "Датчики движения и присутствия", "price": 5600, "sku": "MOTION-08" },
+  { "code": "CURTAIN-10", "name": "Электрокарнизы", "price": 12800, "sku": "CURTAIN-10" },
+  { "code": "CLIMATE-06", "name": "Климатические зоны", "price": 22100, "sku": "CLIMATE-06" },
+  { "code": "FLOOR-09", "name": "Контуры теплого пола", "price": 9200, "sku": "FLOOR-09" },
+  { "code": "LEAK-07", "name": "Датчики протечки", "price": 7100, "sku": "LEAK-07" },
+  { "code": "SCENE-08", "name": "Сценарии автоматизации", "price": 4600, "sku": "SCENE-08" },
+  { "code": "MEDIA-AUDIO-01", "name": "Мультимедиа и акустика гостиной", "price": 145000, "sku": "MEDIA-AUDIO-01" },
+  { "code": "CAM-OUT-06", "name": "Уличная камера видеонаблюдения", "price": 21800, "sku": "CAM-OUT-06" },
+  { "code": "INTERCOM-01", "name": "Домофон и умный замок", "price": 47200, "sku": "INTERCOM-01" },
+  { "code": "VOICE-ALICE-03", "name": "Голосовой ассистент Алиса", "price": 18900, "sku": "VOICE-ALICE-03" }
+]
