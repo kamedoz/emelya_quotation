@@ -660,7 +660,7 @@ function buildHtmlDocument(project, scenario, profile, settings, objectDescripti
     12: { fn: priceOnlyOverlay, section: sections.page12 },
     13: { fn: priceOnlyOverlay, section: sections.page13 },
     14: { fn: noOverlay, section: sections.page14 },
-    15: { fn: noOverlay, section: sections.page15 },
+    15: { fn: priceOnlyOverlay, section: sections.page15 },
   }
 
   for (const [pn, cfg] of Object.entries(pageCfg)) {
@@ -674,25 +674,28 @@ function buildHtmlDocument(project, scenario, profile, settings, objectDescripti
     }
   }
 
-  const visiblePages = new Set([1, 2, 16, 17, 18])
+  // Обложка (1) и контакты (18) — всегда. Остальные страницы (2,3..17)
+  // включаются по флагу пользователя из proposalPages; если флага нет —
+  // по наличию данных (для разделов) либо по умолчанию (2,16,17).
+  const visiblePages = new Set([1, 18])
+  const sectionByPage = {
+    3: sections.page03, 4: sections.page04, 5: sections.page05, 6: sections.page06,
+    7: sections.page07, 8: sections.page08, 9: sections.page09, 10: sections.page10,
+    11: sections.page11, 12: sections.page12, 13: sections.page13, 14: sections.page14,
+    15: sections.page15,
+  }
 
-  for (const [pageNumber, section] of [
-    [3, sections.page03],
-    [4, sections.page04],
-    [5, sections.page05],
-    [6, sections.page06],
-    [7, sections.page07],
-    [8, sections.page08],
-    [9, sections.page09],
-    [10, sections.page10],
-    [11, sections.page11],
-    [12, sections.page12],
-    [13, sections.page13],
-    [14, sections.page14],
-    [15, sections.page15],
-  ]) {
+  for (let pageNumber = 2; pageNumber <= 17; pageNumber++) {
     const pageSummary = proposalPageMap.get(pageNumber)
-    const include = pageSummary ? pageSummary.included !== false : section.include
+    const section = sectionByPage[pageNumber]
+    let include
+    if (pageSummary) {
+      // Пользователь явно управляет видимостью через интерфейс
+      include = pageSummary.included !== false
+    } else {
+      // Нет данных страницы: разделы — по наличию сумм, прочие — по умолчанию да
+      include = section ? section.include : true
+    }
     if (include) {
       visiblePages.add(pageNumber)
     }

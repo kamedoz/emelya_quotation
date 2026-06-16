@@ -135,7 +135,7 @@ export function defaultOverlayConfig(templateId: string): OverlayConfig {
       12: { countCards: [], priceCards: [priceL(358), priceR(332)] },
       13: { countCards: [], priceCards: [priceL(374), priceR(330)] },
       14: { countCards: [], priceCards: [] },
-      15: { countCards: [], priceCards: [] },
+      15: { countCards: [], priceCards: [priceL(380), priceR(332)] },
       16: { countCards: [], priceCards: [] },
       17: { countCards: [], priceCards: [] },
       18: { countCards: [], priceCards: [] },
